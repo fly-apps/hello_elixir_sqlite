@@ -11,10 +11,10 @@ if config_env() == :prod do
     System.get_env("DATABASE_PATH") ||
       raise """
       environment variable DATABASE_PATH is missing.
-      For example: /etc/phx_sequelite/phx_sequelite.db
+      For example: /etc/hello_elixir/hello_elixir.db
       """
 
-  config :phx_sequelite, PhxSequelite.Repo,
+  config :hello_elixir, HelloElixir.Repo,
     database: database_path,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "5")
 

@@ -1,8 +1,8 @@
 import Config
 
 # Configure your database
-config :phx_sequelite, PhxSequelite.Repo,
-  database: Path.expand("../phx_sequelite_dev.db", Path.dirname(__ENV__.file)),
+config :hello_elixir, HelloElixir.Repo,
+  database: Path.expand("../hello_elixir_dev.db", Path.dirname(__ENV__.file)),
   pool_size: 5,
   show_sensitive_data_on_connection_error: true
 
@@ -15,7 +15,7 @@ config :phx_sequelite, PhxSequelite.Repo,
 config :hello_elixir, HelloElixirWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-  http: [ip: {0, 0, 0, 0, 0, 0, 0, 0}, port: 4000],
+  http: [ip: {0, 0, 0, 0, 0, 0, 0, 0}, port: 4001],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
