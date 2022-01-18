@@ -1,19 +1,21 @@
-# fly.toml file generated for fly-elixir on 2021-11-03T10:49:02-06:00
+# fly.toml file generated for sqlite-tests-2 on 2022-01-18T08:17:23-03:00
 
-app = "fly-elixir"
+app = "sqlite-tests-2"
 
 kill_signal = "SIGTERM"
 kill_timeout = 5
 processes = []
 
-[deploy]
-  release_command = "/app/entry eval HelloElixir.Release.migrate"
-
 [env]
+  DATABASE_PATH = "/data/prod.db"
 
 [experimental]
   allowed_public_ports = []
   auto_rollback = true
+
+[mounts]
+source = "database_data"
+destination = "/data"
 
 [[services]]
   http_checks = []

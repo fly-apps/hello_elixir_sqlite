@@ -72,7 +72,7 @@ RUN mix release
 # the compiled release and other runtime necessities
 FROM ${RUNNER_IMAGE}
 
-RUN apt-get update -y && apt-get install -y libstdc++6 openssl libncurses5 locales \
+RUN apt-get update -y && apt-get install -y libstdc++6 openssl libncurses5 locales sqlite3 \
   && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 # Set the locale
@@ -96,4 +96,8 @@ USER nobody
 RUN set -eux; \
   ln -nfs /app/$(basename *)/bin/$(basename *) /app/entry
 
-CMD /app/entry start
+COPY --chown=root:root entrypoint.sh /entrypoint.sh
+# RUN chmod u+x /entrypoint.sh
+# RUN chown nobody /entrypoint.sh
+
+CMD /entrypoint.sh

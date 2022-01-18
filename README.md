@@ -1,100 +1,82 @@
 # HelloElixir!
 
-This is an example project demonstrating how to deploy an Elixir and Phoenix application on Fly.io.
+Welcome to our Code Server for Phoenix Apps.
 
-## Application Structure
+## Development
 
-This creates a basic Phoenix application that uses a PostgreSQL database. The Elixir deployment approach used here is building a release through Docker.
+Right now this editor is running at ${FLY_CODE_URL}. 
 
-- [`Dockerfile`](./Dockerfile) - An Elixir release is built through Docker
-- [`.dockerignore`](./.dockerignore) - Exclude pulling in Elixir deps and Node packages since they might have native compilation from your dev environment
-- [`lib/hello_elixir/release.ex`](./lib/hello_elixir/release.ex) - Executed during deploy from `fly.toml` to run our database migrations
-- [`config/runtime.exs`](./config/runtime.exs) - The runtime ENV values we expect for production
+You need to start the development server to see yout app running at ${FLY_DEVELOPMENT_URL}.
 
-## Fly Configuration
+```sh
+mix phx.server
+```
 
-- [`fly.toml`](./fly.toml) - Fly deployment configuration
+## Deploy
 
-### Secrets
+Looks like we're ready to deploy!
 
-Elixir has a mix task that can generate a new Phoenix key base secret. Let's use that.
+To deploy you just need to run `fly launch`, create your secret key and create a volume. 
+
+Run `fly launch` and make sure to say yes to copy the configuration file 
+to the new app so you wont have to do anything.
+
+```sh
+$ fly launch --no-deploy
+An existing fly.toml file was found for app fly-elixir
+
+? Would you like to copy its configuration to the new app? Yes
+Creating app in /home/coder/project
+Scanning source code
+Detected a Dockerfile app
+
+? App Name (leave blank to use an auto-generated name): your-app-name
+
+? Select organization: Lubien (personal)
+
+? Select region: gru (São Paulo)
+
+Created app sqlite-tests in organization personal
+Wrote config file fly.toml
+Your app is ready. Deploy with `flyctl deploy`
+```
+
+Let's got create your secret key. Elixir has a mix task that can generate a new 
+Phoenix key base secret. Let's use that.
 
 ```bash
 mix phx.gen.secret
 ```
 
-It generates a long string of random text. Let's store that as a secret for our app. When we run this command in our project folder, `flyctl` uses the `fly.toml` file to know which app we are setting the value on.
+It generates a long string of random text. Let's store that as a secret for our app. 
+When we run this command in our project folder, `flyctl` uses the `fly.toml` 
+file to know which app we are setting the value on.
 
-```
-fly secrets set SECRET_KEY_BASE=<GENERATED>
-```
-
-### Postgres Database
-
-```cmd
-fly postgres create
-```
-```output
-? App name: hello-elixir-db
-Automatically selected personal organization: Mark Ericksen
-? Select region: sea (Seattle, Washington (US))
-? Select VM size: shared-cpu-1x - 256
-? Volume size (GB): 10
-Creating postgres cluster hello-elixir-db in organization personal
-Postgres cluster hello-elixir-db created
-  Username:    <USER>
-  Password:    <PASSWORD>
-  Hostname:    hello-elixir-db.internal
-  Proxy Port:  5432
-  PG Port: 5433
-Save your credentials in a secure place, you won't be able to see them again!
-
-Monitoring Deployment
-
-2 desired, 2 placed, 2 healthy, 0 unhealthy [health checks: 6 total, 6 passing]
---> v0 deployed successfully
-
-Connect to postgres
-Any app within the personal organization can connect to postgres using the above credentials and the hostname "hello-elixir-db.internal."
-For example: postgres://<USER>:<PASSWORD>@hello-elixir-db.internal:5432
-
-See the postgres docs for more information on next steps, managing postgres, connecting from outside fly:  https://fly.io/docs/reference/postgres/
+```sh
+$ fly secrets set SECRET_KEY_BASE=<GENERATED>
+Secrets are staged for the first deployment
 ```
 
-We can take the defaults which select the lowest values for CPU, size, etc. This is perfect for getting started.
+Now time to create a volume for your SQLite database. You will need to run
+`fly volumes create database_data --region REGION_NAME`. Pick the same region
+you chose on the previous command.
 
-### Attach our App to the Database
-
-We can use `flyctl` to attach our app to the database which also sets our needed `DATABASE_URL` ENV value.
-
-```cmd
-fly postgres attach --postgres-app hello-elixir-db
-```
-```output
-Postgres cluster hello-elixir-db is now attached to icy-leaf-7381
-The following secret was added to icy-leaf-7381:
-  DATABASE_URL=postgres://<NEW_USER>:<NEW_PASSWORD>@hello-elixir-db.internal:5432/icy_leaf_7381?sslmode=disable
-```
-
-We can see the secrets that Fly is using for our app like this.
-
-```cmd
-fly secrets list
-```
-```output
-NAME            DIGEST                           DATE
-DATABASE_URL    830d8769ff33cba6c8b29d1cd6a6fbac 1m10s ago
-SECRET_KEY_BASE 84c992ac7ef334c21f2aaecd41c43666 9m20s ago
+```sh
+$ fly volumes create database_data --size 1 --region gru
+        ID: vol_1g67340g9y9rydxw
+      Name: database_data
+       App: sqlite-tests
+    Region: gru
+      Zone: 2824
+   Size GB: 1
+ Encrypted: true
+Created at: 18 Jan 22 11:18 UTC
 ```
 
-Looks like we're ready to deploy!
+Now go for the deploy!
 
-## Deploy
-
-Once you've went through the steps of `fly launch`:
-
-```
-fly deploy
+```sh
+$ fly deploy
 ```
 
 ... will bring up your app!
