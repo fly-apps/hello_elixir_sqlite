@@ -1,4 +1,4 @@
-# Hello Elixir!
+# Hello Elixir SQLite!
 
 Welcome to our Code Server for Phoenix Apps.
 
