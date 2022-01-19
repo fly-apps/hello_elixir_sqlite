@@ -33,3 +33,4 @@ hello_elixir-*.tar
 npm-debug.log
 /assets/node_modules/
 
+hello_elixir_dev.db*
