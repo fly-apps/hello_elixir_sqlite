@@ -16,9 +16,9 @@ mix phx.server
 
 Looks like we're ready to deploy!
 
-To deploy you just need to run `fly launch`, create your secret key and create a volume. 
+To deploy you just need to run `fly launch --no-deploy`, create your secret key and create a volume. 
 
-Run `fly launch` and make sure to say yes to copy the configuration file 
+Run `fly launch --no-deploy` and make sure to say yes to copy the configuration file 
 to the new app so you wont have to do anything.
 
 ```sh
