@@ -14,8 +14,8 @@ processes = []
   auto_rollback = true
 
 [mounts]
-source = "database_data"
-destination = "/data"
+  destination = "/data"
+  source = "database_data"
 
 [[services]]
   http_checks = []
