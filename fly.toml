@@ -4,6 +4,7 @@ processes = []
 
 [env]
   DATABASE_PATH = "/data/prod.db"
+  PORT = "8080"
 
 [experimental]
   allowed_public_ports = []
@@ -15,11 +16,10 @@ processes = []
 
 [[services]]
   http_checks = []
-  internal_port = 4000
+  internal_port = 8080
   processes = ["app"]
   protocol = "tcp"
   script_checks = []
-
   [services.concurrency]
     hard_limit = 25
     soft_limit = 20
